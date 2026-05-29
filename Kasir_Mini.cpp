@@ -9,80 +9,16 @@ struct data_barang{
     int stok_brg, harga_brg;
 };
 
-void menambah_data(data_barang db[]){
-    system("cls");
-
-    bool duplikat = false;
-
-    string nama_baru, kode_baru;
-    int x;
-
-    do{
-        cout << "Jumlah Barang yang ingin diinputkan: "; cin >> x;
-
-        if (x + jumlah_barang > 1000){
-            cout << "Data Sudah Penuh! Hanya Tersisa " << 1000 - jumlah_barang << " slot data barang." << endl;
-            system("pause");
-            cout << endl;
-            system("cls");
-            break;
-        }
-
-    } while (x + jumlah_barang > 1000);
-
-    cin.ignore(100, '\n');
-
-    for (int i = 0; i < x; i++){
-        
-        cout << endl;
-        cout << "Mencatat data barang ke-" << i+1 << endl << endl;
-        do{
-            duplikat = false;
-            cout << "Nama Barang: "; getline(cin, nama_baru);
-            
-            for (int j = 0; j < jumlah_barang; j++){
-                if (nama_baru == db[j].nama_brg){
-                    duplikat = true;
-                    cout << "Nama sudah pernah digunakan! Gunakan nama barang lain.";
-                    system("pause");
-                    cout << endl;
-                }
-                break;
-            }
-
-        } while (duplikat == true);
-
-        db[i].nama_brg = nama_baru;
-
-        do{
-            duplikat = false;
-            cout << "Kode Barang: "; cin >> kode_baru;
-            for (int k = 0; k < jumlah_barang; k++){
-                if (kode_baru == db[k].kode_brg){
-                    duplikat = true;
-                    cout << "Kode sudah digunakan! Gunakan kode barang lain." << endl << endl;
-                    system("pause");
-                    cout << endl;
-                }
-                break;
-            }
-
-        } while (duplikat == true);
-
-        db[i].kode_brg = kode_baru;
-
-        cout << "Harga Barang: "; cin >> db[i].harga_brg;
-        cout << "Jumlah Ketersediaan Barang: "; cin >> db[i].stok_brg;
-        
-        cin.ignore(100, '\n');
-        
-    }
-
+// ERROR HANDLING
+void errorInput() {
+    cout << endl;
+    cin.clear();
+    cin.ignore(1000, '\n');
+    cout << "Input tidak valid." << endl << endl;
     system("pause");
-    system("cls");
-    jumlah_barang = jumlah_barang + x;
-    
 }
+
+// PENDUKUNG
 
 void kb_urut(data_barang db[]){
     for (int i = 0; i < jumlah_barang - 1; i++){
@@ -93,11 +29,12 @@ void kb_urut(data_barang db[]){
         }
     }
 
+    cout << "===== Mengurutkan Barang dari Kode Terkecil ======" << endl << endl;
     for (int k = 0; k < jumlah_barang; k++){
-        cout << "Nama Barang: " << db[k].nama_brg << endl
-             << "Kode Barang: " << db[k].kode_brg << endl
-             << "Harga Barang: " << db[k].harga_brg << endl
-             << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+        cout << "Kode Barang: " << db[k].kode_brg << endl
+             << "| Nama Barang: " << db[k].nama_brg << endl
+             << "| Harga Barang: " << db[k].harga_brg << endl
+             << "| Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
              << endl;
     }
 
@@ -115,11 +52,12 @@ void hmurah_urut(data_barang db[]){
         }
     }
 
+    cout << "===== Mengurutkan Barang dari Harga Termurah ======" << endl << endl;
     for (int k = 0; k < jumlah_barang; k++){
-        cout << "Nama Barang: " << db[k].nama_brg << endl
-             << "Kode Barang" << db[k].kode_brg << endl
-             << "Harga Barang: " << db[k].harga_brg << endl
-             << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+        cout << "Harga Barang: " << db[k].harga_brg << endl
+             << "| Nama Barang: " << db[k].nama_brg << endl
+             << "| Kode Barang: " << db[k].kode_brg << endl
+             << "| Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
              << endl;
     }
 
@@ -137,11 +75,12 @@ void hmahal_urut(data_barang db[]){
         }
     }
 
+    cout << "===== Mengurutkan Barang dari Harga Termahal ======" << endl << endl;
     for (int k = 0; k < jumlah_barang; k++){
-        cout << "Nama Barang: " << db[k].nama_brg << endl
-             << "Kode Barang: " << db[k].kode_brg << endl
-             << "Harga Barang: " << db[k].harga_brg << endl
-             << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+        cout << "Harga Barang: " << db[k].harga_brg << endl
+             << "| Nama Barang: " << db[k].nama_brg << endl
+             << "| Kode Barang: " << db[k].kode_brg << endl
+             << "| Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
              << endl;
     }
 
@@ -159,11 +98,12 @@ void sb_banyak(data_barang db[]){
         }
     }
 
+    cout << "===== Mengurutkan Barang dari Jumlah Ketersediaan Barang Terbanyak ======" << endl << endl;
     for (int k = 0; k < jumlah_barang; k++){
-        cout << "Nama Barang: " << db[k].nama_brg << endl
-             << "Kode Barang: " << db[k].kode_brg << endl
-             << "Harga Barang: " << db[k].harga_brg << endl
-             << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+        cout << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+             << "| Kode Barang: " << db[k].kode_brg << endl
+             << "| Nama Barang: " << db[k].nama_brg << endl
+             << "| Harga Barang: " << db[k].harga_brg << endl
              << endl;
     }
 
@@ -181,17 +121,108 @@ void sb_dikit(data_barang db[]){
         }
     }
 
+    cout << "===== Mengurutkan Barang dari Jumlah Ketersediaan Barang Terkecil ======" << endl << endl;
     for (int k = 0; k < jumlah_barang; k++){
-        cout << "Nama Barang: " << db[k].nama_brg << endl
-             << "Kode Barang: " << db[k].kode_brg << endl
-             << "Harga Barang: " << db[k].harga_brg << endl
-             << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl 
+        cout << "Jumlah Ketersediaan Barang: " << db[k].stok_brg << endl
+             << "| Nama Barang: " << db[k].nama_brg << endl
+             << "| Kode Barang: " << db[k].kode_brg << endl
+             << "| Harga Barang: " << db[k].harga_brg << endl 
              << endl;
     }
 
     if (jumlah_barang == 0){
         cout << "Data barang masih kosong" << endl;
     }
+}
+
+// MENU UTAMA
+
+void menambah_data(data_barang db[]){
+    system("cls");
+
+    bool duplikat = false;
+    string nama_baru, kode_baru;
+    int x;
+
+    do{
+        cout << "Jumlah Barang yang ingin diinputkan: "; 
+        
+        if (!(cin >> x)){
+            errorInput();
+            system("cls");
+            return;
+        }
+
+        if (x + jumlah_barang > 1000){
+            cout << "Data Sudah Penuh! Hanya Tersisa " << 1000 - jumlah_barang << " slot data barang." << endl;
+            system("pause");
+            cout << endl;
+            system("cls");
+            break;
+        }
+
+    } while (x + jumlah_barang > 1000);
+
+    cin.ignore(100, '\n');
+
+    for (int i = 0; i < x; i++){
+        int indeks_sekarang = jumlah_barang + i;
+        cout << endl;
+        cout << "Mencatat data barang ke-" << i+1 << endl;
+
+        cout << "Nama Barang: "; getline(cin, db[indeks_sekarang].nama_brg = nama_baru);
+
+        do{
+            duplikat = false;
+            cout << "Kode Barang: "; 
+            
+            if (!(cin >> kode_baru)){
+                errorInput();
+                duplikat = true;
+            }
+
+            for (int k = 0; k < jumlah_barang + i; k++){
+                if (kode_baru == db[k].kode_brg){
+                    duplikat = true;
+                    cout << "Kode sudah digunakan! Gunakan kode lain." << endl;
+                    break;
+                }
+            }
+
+            if(!duplikat){
+                db[indeks_sekarang].kode_brg = kode_baru;
+            }
+
+        } while (duplikat == true);
+
+        do {
+            duplikat = false;
+            cout << "Harga Barang: "; 
+
+            if (!(cin >> db[indeks_sekarang].harga_brg)){
+                errorInput;
+                duplikat = true;
+            }
+        } while (duplikat == true);
+
+        do {
+            duplikat = false;
+            cout << "Jumlah Ketersediaan Barang: "; 
+
+            if (!(cin >> db[indeks_sekarang].stok_brg)){
+                errorInput;
+                duplikat = true;
+            }
+        } while (duplikat == true);
+        
+        cin.ignore(100, '\n');
+        
+    }
+
+    jumlah_barang = jumlah_barang + x;
+    cout << "Data berhasil ditambahkan!" << endl << endl;
+    system("pause");
+    system("cls");
 }
 
 void mengurutkan_barang(data_barang db[]){
@@ -206,6 +237,7 @@ void mengurutkan_barang(data_barang db[]){
     int pilih;
     cout << "masukkan pilihan Anda: ";
     cin >> pilih;
+    system("cls");
 
     switch(pilih){
         case 1:
@@ -245,12 +277,14 @@ void mencari_barang(data_barang db[]){
     int pilih;
     string cari;
     int cari_angka;
+
     cout << "Anda dapat mencari berdasarkan:" << endl
          << "1. Nama Barang" << endl
          << "2. Kode Barang" << endl
          << "3. Harga Barang" << endl
          << "4. Ketersediaan Barang" << endl;
     cout << "Anda ingin mencari barang berdasarkan apaa?? "; cin >> pilih;
+    system("cls");
 
     switch (pilih){
         case 1:
@@ -260,9 +294,9 @@ void mencari_barang(data_barang db[]){
                 if (db[i].nama_brg == cari){
                     cout << endl;
                     cout << "Nama Barang: " << db[i].nama_brg << endl
-                        << "Kode Baramg: " << db[i].kode_brg << endl
-                        << "Harga Barang: " << db[i].harga_brg << endl
-                        << "Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl << endl;
+                         << "| Kode Baramg: " << db[i].kode_brg << endl
+                         << "| Harga Barang: " << db[i].harga_brg << endl
+                         << "| Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
                     
                     ketemu = true;
                 }
@@ -275,10 +309,13 @@ void mencari_barang(data_barang db[]){
 
             for (int i = 0; i < jumlah_barang; i++){
                 if (db[i].kode_brg == cari){
-                    cout << "Nama Barang: " << db[i].nama_brg << endl
-                         << "Kode Baramg: " << db[i].kode_brg << endl
-                         << "Harga Barang: " << db[i].harga_brg << endl
-                         << "Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
+                    cout << endl;
+                    cout << "Kode Baramg: " << db[i].kode_brg << endl
+                         << "| Nama Barang: " << db[i].nama_brg << endl
+                         << "| Harga Barang: " << db[i].harga_brg << endl
+                         << "| Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
+
+                    ketemu = true;
                 }
             }
 
@@ -290,10 +327,12 @@ void mencari_barang(data_barang db[]){
             for (int i = 0; i < jumlah_barang; i++){
                 if (db[i].harga_brg == cari_angka){
                     cout << endl;
-                    cout << "Nama Barang: " << db[i].nama_brg << endl
-                         << "Kode Baramg: " << db[i].kode_brg << endl
-                         << "Harga Barang: " << db[i].harga_brg << endl
-                         << "Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
+                    cout << "Harga Barang: " << db[i].harga_brg << endl
+                         << "| Nama Barang: " << db[i].nama_brg << endl
+                         << "| Kode Baramg: " << db[i].kode_brg << endl
+                         << "| Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
+
+                    ketemu = true;
                 }
             }
 
@@ -305,10 +344,12 @@ void mencari_barang(data_barang db[]){
             for (int i = 0; i < jumlah_barang; i++){
                 if (db[i].stok_brg == cari_angka){
                     cout << endl;
-                    cout << "Nama Barang: " << db[i].nama_brg << endl
-                        << "Kode Baramg: " << db[i].kode_brg << endl
-                        << "Harga Barang: " << db[i].harga_brg << endl
-                        << "Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl;
+                    cout << "Jumlah Ketersediaan Barang: " << db[i].stok_brg << endl
+                         << "| Nama Barang: " << db[i].nama_brg << endl
+                         << "| Kode Baramg: " << db[i].kode_brg << endl
+                         << "| Harga Barang: " << db[i].harga_brg << endl;
+
+                    ketemu = true;
                 }
             }
 
@@ -319,6 +360,7 @@ void mencari_barang(data_barang db[]){
         cout << "data tidak ditemukan." << endl;
     }
 
+    cout << endl;
     system ("pause");
     system ("cls");
 }
@@ -387,11 +429,17 @@ int main(){
             << "3. Mencari barang" << endl
             << "4. Total belanja" << endl
             << "5. Riwayat Pembelian" << endl 
-            << "6. Keluar" << endl;
+            << "0. Keluar" << endl;
 
         cout << "silahkan pilih menu: ";
+        //cin >> pilih;
+
+        if (!(cin >> pilih)){
+            errorInput();
+            system("cls");
+            pilih = 7;
+        } 
         
-        cin >> pilih;
         switch(pilih){
             case 1:
                 menambah_data(db);
@@ -403,13 +451,16 @@ int main(){
                 mencari_barang(db);
                 break;
             case 4:
-                //total_belanja();
+                //total_belanja(db);
                 //break;
             case 5:
                 //riwayat_pembelian();
                 //break;
-            case 6:
+            case 0:
                 return 0;
+            default:
+                pilih = 7;
+                continue;
         }
-    } while (pilih != 6);
+    } while (pilih != 0);
 }
