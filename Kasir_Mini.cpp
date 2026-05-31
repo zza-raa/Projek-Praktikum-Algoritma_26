@@ -8,7 +8,7 @@ int total_keseluruhan = 0;
 int jumlah_transaksi = 0;
 
 struct Transaksi {
-	int jumlah_item, total_belanja, jumlah_beli;
+	int total_belanja, jumlah_beli;
 };
 
 struct data_barang{
@@ -64,17 +64,33 @@ void initData() {
         file >> db[jumlah_barang].harga_brg
              >> db[jumlah_barang].stok_brg;
         file.ignore();
+
+        db[jumlah_barang].tr.jumlah_beli = 0;
         jumlah_barang++;
     }
     
     file.close();
 }
 
+int diskon(int kelipatan){
+    if (kelipatan <= 0){
+        return 0;
+    } else {
+        return (kelipatan * 300) + diskon(kelipatan - 1);
+    }
+}
+
+void swapData(data_barang *a, data_barang *b) {
+  data_barang temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
 void kb_urut(data_barang db[]){
-     for (int i = 0; i < jumlah_barang - 1; i++){
+    for (int i = 0; i < jumlah_barang - 1; i++){
         for (int j = 0; j < jumlah_barang - i - 1; j++){
             if (db[j].kode_brg > db[j+1].kode_brg){
-                swap (db[j], db[j+1]);
+                swapData(&db[j], &db[j+1]);
             }
         }
     }
@@ -97,7 +113,7 @@ void hmurah_urut(data_barang db[]){
     for (int i = 0; i < jumlah_barang - 1; i++){
         for (int j = 0; j < jumlah_barang - i - 1; j++){
             if (db[j].harga_brg > db[j+1].harga_brg){
-                swap (db[j], db[j+1]);
+                swapData(&db[j], &db[j+1]);
             }
         }
     }
@@ -120,7 +136,7 @@ void hmahal_urut(data_barang db[]){
     for (int i = 0; i < jumlah_barang - 1; i++){
         for (int j = 0; j < jumlah_barang - i - 1; j++){
             if (db[j].harga_brg < db[j+1].harga_brg){
-                swap (db[j], db[j+1]);
+                swapData(&db[j], &db[j+1]);
             }
         }
     }
@@ -143,7 +159,7 @@ void sb_banyak(data_barang db[]){
     for (int i = 0; i < jumlah_barang - 1; i++){
         for (int j = 0; j < jumlah_barang - i - 1; j++){
             if (db[j].stok_brg < db[j+1].stok_brg){
-                swap (db[j], db[j+1]);
+                swapData(&db[j], &db[j+1]);
             }
         }
     }
@@ -166,7 +182,7 @@ void sb_dikit(data_barang db[]){
     for (int i = 0; i < jumlah_barang - 1; i++){
         for (int j = 0; j < jumlah_barang - i - 1; j++){
             if (db[j].stok_brg > db[j+1].stok_brg){
-                swap (db[j], db[j+1]);
+                swapData(&db[j], &db[j+1]);
             }
         }
     }
@@ -334,12 +350,17 @@ void mencari_barang(data_barang db[]){
          << "2. Kode Barang" << endl
          << "3. Harga Barang" << endl
          << "4. Ketersediaan Barang" << endl;
-    cout << "Anda ingin mencari barang berdasarkan apaa?? "; cin >> pilih;
+    cout << "Anda ingin mencari barang berdasarkan apaa?? "; 
+    if (!(cin >> pilih)) { 
+        errorInput(); 
+        return; 
+    }
+    cin.ignore(1000, '\n');
     system("cls");
 
     switch (pilih){
         case 1:
-            cout << "Masukkan nama barang yang ingin dicari: "; cin >> cari;
+            cout << "Masukkan nama barang yang ingin dicari: "; getline (cin, cari);
 
             for (int i = 0; i < jumlah_barang; i++){
                 if (db[i].nama_brg == cari){
@@ -407,7 +428,7 @@ void mencari_barang(data_barang db[]){
             break;
     }
 
-    if (ketemu == false){
+    if (!ketemu){
         cout << "data tidak ditemukan." << endl;
     }
 
@@ -419,11 +440,20 @@ void mencari_barang(data_barang db[]){
 void total_belanja() {
 	string cari_kode;
 	int total_bayar = 0;
-	int jumlah_item;
+	int jumlah_item, potongan_harga, kelipatan;
+    int input_jumlah;
 	bool ulang = false;
 	
-	cout << "Masukkan jumlah item: ";
-	cin >> jumlah_item;	
+    do {
+        ulang = false;
+        cout << "Masukkan jumlah item: ";
+
+        if (!(cin >> jumlah_item)){
+            errorInput();
+            ulang = true;
+        }
+    } while (ulang == true);
+
 	for(int i = 0; i < jumlah_item; i++){
 		cout << "\nMasukkan Kode Barang: ";
 		
@@ -445,9 +475,9 @@ void total_belanja() {
 				
 				do{
 					ulang = false;
-					cout << "\n| Jumlah Barang : ";
+					cout << "\n| Jumlah Beli    : ";
 
-					if (!(cin >> db[j].tr.jumlah_beli)){
+					if (!(cin >> input_jumlah)){
 						errorInput();
 						ulang = true;
 					}
@@ -457,12 +487,14 @@ void total_belanja() {
                             cout << "\nMohon Maaf, ketersediaan stok hanya " << db[j].stok_brg << endl;
                             ulang = true;
                         } else {
-                            total_bayar = db[j].harga_brg * db[j].tr.jumlah_beli;
+                            db[j].tr.jumlah_beli += input_jumlah;
+
+                            total_bayar = db[j].harga_brg * input_jumlah;
                             total_keseluruhan += total_bayar;			
                             db[j].stok_brg -= db[j].tr.jumlah_beli;
                                 
                             cout << "\nBarang berhasil ditambahkan ke keranjang!\n" << endl;
-                            cout << "Subtotal		: Rp" << total_bayar << endl;
+                            cout << "Subtotal		: Rp" << total_bayar<< endl;
                             cout << "Sisa Stok		: " << db[j].stok_brg << endl;
                             jumlah_transaksi++;
                         }
@@ -477,8 +509,17 @@ void total_belanja() {
             i--;
         }
 	}
+
+    saveData_Barang();
 	cout << "\nTotal Belanja		: Rp" << total_keseluruhan << endl << endl;
-	
+
+    if (total_keseluruhan >= 10000){
+        potongan_harga = diskon(total_keseluruhan/10000);
+        total_keseluruhan = total_keseluruhan - potongan_harga;
+        cout << "Selamat, Anda Berhak Mendapatkan Diskon sebesar: Rp" << potongan_harga << endl
+             << "Total Belanjaan Anda setelah diskon: " << total_keseluruhan << endl;
+    }
+
 	system("pause");
 	system("cls");
 }
@@ -491,24 +532,19 @@ void riwayat_pembelian() {
         return;
     }
     
-    for (int i = 0; i < jumlah_barang - 1; i++){
-        for (int j = 0; j < jumlah_barang - i - 1; j++){
-            if (db[j].kode_brg > db[j+1].kode_brg){
-                swap (db[j], db[j+1]);
-            }
+    cout << "===== Riwayat Transaksi =====" << endl;
+    for(int i = 0; i < jumlah_transaksi; i++) {
+        if (db[i].tr.jumlah_beli > 0){
+            cout << "\nProduk ke - " << i + 1 << endl
+                << "| Kode         : " << db[i].kode_brg << endl
+                << "| Nama         : " << db[i].nama_brg << endl
+                << "| Jumlah Beli  : " << db[i].tr.jumlah_beli << endl
+                << "| Harga Satuan : " << db[i].harga_brg << endl
+                << "| Subtotal     : " << db[i].harga_brg * db[i].tr.jumlah_beli << endl << endl;
         }
     }
 
-    cout << "===== Riwayat Transaksi =====" << endl;
-    for(int i = 0; i < jumlah_transaksi; i++) {
-        if (db[i].tr.jumlah_beli){
-            cout << "\nTransaksi ke - " << i + 1 << endl
-                << "| Kode        : " << db[i].kode_brg << endl
-                << "| Nama        : " << db[i].nama_brg << endl
-                << "| Jumlah Item  : " << db[i].tr.jumlah_beli << endl
-                << "| Total Harga  : " << total_keseluruhan << endl;
-        }
-    }
+    cout << "Total Keseluruhan Belanja: Rp" << total_keseluruhan << endl << endl;
     
     system("pause");
     system("cls");
