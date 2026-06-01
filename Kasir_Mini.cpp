@@ -541,6 +541,7 @@ void riwayat_pembelian() {
     
     int no = 1;
     int total_riwayat = 0;
+    int potongan_harga;
     for(int i = 0; i < jumlah_barang; i++) {
         if (db[i].tr.jumlah_beli > 0){
 			cout << "\nProduk ke - " << no << endl
@@ -555,7 +556,13 @@ void riwayat_pembelian() {
         }
     }
     cout << "\n---------------------------------------------------\n";
-    cout << "Total Keseluruhan Belanja : Rp" << total_riwayat << "\n\n";
+    cout << "Total Keseluruhan Belanja : Rp" << total_riwayat << "\n";
+
+    if (total_keseluruhan >= 10000){
+        potongan_harga = diskon(total_riwayat/10000);
+        total_riwayat = total_riwayat - potongan_harga;
+        cout << "[$] Total Belanjaan Anda setelah diskon : Rp" << total_riwayat << "\n\n\n";
+    }
     
     system("pause");
     system("cls");
