@@ -558,7 +558,7 @@ void riwayat_pembelian() {
     cout << "\n---------------------------------------------------\n";
     cout << "Total Keseluruhan Belanja : Rp" << total_riwayat << "\n";
 
-    if (total_keseluruhan >= 10000){
+    if (total_riwayat >= 10000){
         potongan_harga = diskon(total_riwayat/10000);
         total_riwayat = total_riwayat - potongan_harga;
         cout << "[$] Total Belanjaan Anda setelah diskon : Rp" << total_riwayat << "\n\n\n";
